@@ -59,6 +59,8 @@ def _load_from_checkpoint(
     **kwargs: Any,
 ) -> Union["pl.LightningModule", "pl.LightningDataModule"]:
     with pl_legacy_patch():
+        if map_location is None:
+            map_location = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         checkpoint = pl_load(checkpoint_path, map_location=map_location)
 
     # convert legacy checkpoints to the new format
